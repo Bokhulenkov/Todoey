@@ -7,24 +7,21 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    //        путь сохранения контента в файловой системе
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+   
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadItems()
-        
-        //        if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
-        //            itemArray = items
-        //        }
+//        loadItems()
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     }
     
     // MARK: - Action
@@ -36,8 +33,13 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new ToDo", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add item", style: .default) { action in
             
-            var newItem = Item()
+//            получаем доступ к contex из AppDelegate
+            let contex = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            
+//            инициализируем объект базы данных
+            let newItem = Item(context: contex)
             newItem.title = textField.text ?? " "
+            newItem.done = false
             
             self.itemArray.append(newItem)
             
@@ -94,30 +96,28 @@ class TodoListViewController: UITableViewController {
     // MARK: - Encoder
     
     func saveItems() {
-        //            создаем енкодер для нашиш данных
-        let encoder = PropertyListEncoder()
+       
         do {
-            let data = try encoder.encode(self.itemArray)
-            //                записываем наши данные
-            try data.write(to: dataFilePath!)
+            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            try context.save()
         } catch {
-            print("We have error encoder \(error)")
+           print("Error savign context \(error)")
         }
     }
     
 // MARK: - Decoder
     
-    func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoder \(error)")
-            }
-        }
-        
-    }
+//    func loadItems() {
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decoder = PropertyListDecoder()
+//            do {
+//                itemArray = try decoder.decode([Item].self, from: data)
+//            } catch {
+//                print("Error decoder \(error)")
+//            }
+//        }
+//        
+//    }
 }
 
 
