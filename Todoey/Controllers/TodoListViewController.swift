@@ -9,12 +9,11 @@
 import UIKit
 import CoreData
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: UITableViewController, UISearchBarDelegate {
     
     var itemArray = [Item]()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     
     // MARK: - Life Cycle
     
@@ -107,6 +106,29 @@ class TodoListViewController: UITableViewController {
         } catch {
             print("Error load \(error)")
         }
+    }
+    
+    // MARK: - Search Bar Delegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+//        смотрим содержит ли атрибут title значение %@ из searchBar
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text ?? " ")
+        
+        request.predicate = predicate
+        
+//        сортируем полученные данные
+        let sortDesctiptor = NSSortDescriptor(key: "title", ascending: true)
+        
+        request.sortDescriptors = [sortDesctiptor]
+        
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Search error \(error)")
+        }
+        
+        tableView.reloadData()
     }
 }
 
