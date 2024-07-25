@@ -13,15 +13,15 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-   
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        loadItems()
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        loadItems()
     }
     
     // MARK: - Action
@@ -33,11 +33,8 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new ToDo", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add item", style: .default) { action in
             
-//            получаем доступ к contex из AppDelegate
-            let contex = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-            
-//            инициализируем объект базы данных
-            let newItem = Item(context: contex)
+            //            инициализируем объект базы данных
+            let newItem = Item(context: self.context)
             newItem.title = textField.text ?? " "
             newItem.done = false
             
@@ -45,7 +42,6 @@ class TodoListViewController: UITableViewController {
             
             self.saveItems()
             
-            self.tableView.reloadData()
         }
         
         alert.addTextField { alertTextField in
@@ -85,39 +81,30 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
         
         self.saveItems()
-        
-        //        if itemArray[indexPath.row].done == false {
-        //            itemArray[indexPath.row].done = true
-        //        } else {
-        //            itemArray[indexPath.row].done = false
-        //        }
     }
     
     // MARK: - Encoder
     
     func saveItems() {
-       
+        
         do {
-            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
             try context.save()
         } catch {
-           print("Error savign context \(error)")
+            print("Error savign context \(error)")
         }
+        self.tableView.reloadData()
     }
     
-// MARK: - Decoder
+    // MARK: - Load Data
     
-//    func loadItems() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//            do {
-//                itemArray = try decoder.decode([Item].self, from: data)
-//            } catch {
-//                print("Error decoder \(error)")
-//            }
-//        }
-//        
-//    }
+    func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error load \(error)")
+        }
+    }
 }
 
 
