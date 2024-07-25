@@ -76,11 +76,14 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        удаляем элемент из контекста
+        context.delete(itemArray[indexPath.row])
+//        удаляем из списка элементов
+        itemArray.remove(at: indexPath.row)
         
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        tableView.reloadData()
+//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        self.saveItems()
+        saveItems()
     }
     
     // MARK: - Encoder
