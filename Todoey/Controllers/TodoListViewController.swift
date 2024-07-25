@@ -99,13 +99,15 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
     
     // MARK: - Load Data
     
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("Error load \(error)")
         }
+    
+        tableView.reloadData()
     }
     
     // MARK: - Search Bar Delegate
@@ -122,13 +124,7 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
         
         request.sortDescriptors = [sortDesctiptor]
         
-        do {
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Search error \(error)")
-        }
-        
-        tableView.reloadData()
+        loadItems(with: request)
     }
 }
 
