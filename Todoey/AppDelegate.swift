@@ -21,17 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        место расположения
         print(Realm.Configuration.defaultConfiguration.fileURL!)
         
-        let data = Data()
-        data.name = "Alex"
-        data.age = 15
         
         do {
             let realm = try Realm()
-            //            записываем в бд
-            try realm.write {
-                realm.add(data)
-            }
-        } catch {
+            } catch {
             print("Error launc realm \(error)")
         }
         

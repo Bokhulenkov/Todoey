@@ -2,14 +2,16 @@
 //  Item.swift
 //  Todoey
 //
-//  Created by Alexander Bokhulenkov on 24.07.2024.
+//  Created by Alexander Bokhulenkov on 26.07.2024.
 //  Copyright © 2024 App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import RealmSwift
 
-struct Item: Codable {
-    
-    var title: String = ""
-    var done: Bool = false
+class Item: Object {
+    @objc dynamic var title: String = ""
+    @objc dynamic var done: Bool = false
+    //    связь с катерогией
+    var parentCategory = LinkingObjects(fromType: Category.self, property: "items")
 }
