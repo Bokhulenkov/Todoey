@@ -72,6 +72,19 @@ class CategoryTableViewController: SwipeViewController  {
         tableView.reloadData()
     }
     
+    //    delete data
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDeletion = self.categories?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+            } catch {
+                print("error delete \(error)")
+            }
+        }
+    }
 }
 
 // MARK: - Extensions TableView
@@ -83,7 +96,7 @@ extension CategoryTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         //  получаем ячейку из суперкласса
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         

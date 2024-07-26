@@ -30,17 +30,8 @@ class SwipeViewController: UITableViewController, SwipeTableViewCellDelegate {
         guard orientation == .right else { return nil }
         
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            print("del cell")
-//            if let categoryForDeletion = self.categories?[indexPath.row] {
-//                do {
-//                    try self.realm.write {
-//                        self.realm.delete(categoryForDeletion)
-//                    }
-//                } catch {
-//                    print("error delete \(error)")
-//                }
-//                tableView.reloadData()
-//            }
+            
+            self.updateModel(at: indexPath)
         }
         
         // customize the action appearance
@@ -49,11 +40,14 @@ class SwipeViewController: UITableViewController, SwipeTableViewCellDelegate {
         return [deleteAction]
     }
     
-    func tableView(_ tableView: UITableView, editActionsOptionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
         var options = SwipeOptions()
         options.expansionStyle = .destructive
-        tableView.reloadData()
         return options
+    }
+    
+    func updateModel(at indexPath: IndexPath) {
+        print("update model super class")
     }
 }
 
