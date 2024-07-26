@@ -8,10 +8,13 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class CategoryTableViewController: UITableViewController {
     
-//    объявление и создание Realm
+    
+    
+    //    объявление и создание Realm
     let realm = try! Realm()
     
     var categories: Results<Category>?
@@ -20,7 +23,9 @@ class CategoryTableViewController: UITableViewController {
         super.viewDidLoad()
         
         loadCategories()
-
+        
+        tableView.rowHeight = 80.0
+        
     }
     
     // MARK: - Action
@@ -80,11 +85,11 @@ extension CategoryTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories"
         cell.selectionStyle = .none
-        
+        cell.delegate = self
         return cell
     }
     
@@ -99,4 +104,32 @@ extension CategoryTableViewController {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
+}
+
+// MARK: - Extensions SwipeTableViewCellDelegate
+
+extension CategoryTableViewController: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            if let categoryForDeletion = self.categories?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        self.realm.delete(categoryForDeletion)
+                    }
+                } catch {
+                    print("error delete \(error)")
+                }
+                tableView.reloadData()
+            }
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete-icon")
+        
+        return [deleteAction]
+    }
+    
 }
