@@ -132,4 +132,10 @@ extension CategoryTableViewController: SwipeTableViewCellDelegate {
         return [deleteAction]
     }
     
+    func collectionView(_ collectionView: UICollectionView, editActionsOptionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        tableView.reloadData()
+        return options
+    }
 }
