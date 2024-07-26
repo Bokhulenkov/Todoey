@@ -22,8 +22,6 @@ class CategoryTableViewController: SwipeViewController  {
         
         loadCategories()
         
-        tableView.rowHeight = 80.0
-        
     }
     
     // MARK: - Action
