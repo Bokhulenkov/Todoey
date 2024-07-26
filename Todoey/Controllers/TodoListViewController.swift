@@ -110,16 +110,8 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
     // MARK: - Search Bar Delegate
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //        let request: NSFetchRequest<Item> = Item.fetchRequest()
-        //        смотрим содержит ли атрибут title значение %@ из searchBar
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text ?? " ")
         
-        //        request.predicate = predicate
-        
-        //        сортируем полученные данные
-        let sortDesctiptor = NSSortDescriptor(key: "title", ascending: true)
-        
-        
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "title", ascending: true)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
