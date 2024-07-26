@@ -98,7 +98,5 @@ extension CategoryTableViewController {
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
-        
-        
     }
 }
