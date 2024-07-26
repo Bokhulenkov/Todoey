@@ -13,6 +13,12 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
     
     var itemArray = [Item]()
     
+    var selectedCategory: Category? {
+        didSet {
+            loadItems()
+        }
+    }
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     // MARK: - Life Cycle
@@ -20,7 +26,6 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadItems()
     }
     
     // MARK: - Action
@@ -36,7 +41,7 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
             let newItem = Item(context: self.context)
             newItem.title = textField.text ?? " "
             newItem.done = false
-            
+            newItem.parentCategory = self.selectedCategory
             self.itemArray.append(newItem)
             
             self.saveItems()
@@ -99,8 +104,16 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
     
     // MARK: - Load Data
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
 
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
         do {
             itemArray = try context.fetch(request)
         } catch {
@@ -124,7 +137,7 @@ class TodoListViewController: UITableViewController, UISearchBarDelegate {
         
         request.sortDescriptors = [sortDesctiptor]
         
-        loadItems(with: request)
+        loadItems(with: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
