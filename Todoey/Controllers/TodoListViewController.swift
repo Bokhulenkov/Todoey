@@ -28,6 +28,13 @@ class TodoListViewController: SwipeViewController, UISearchBarDelegate {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        title = selectedCategory?.name
+        guard let navBar = navigationController?.navigationBar else {fatalError("NC не существует") }
+//        navBar.backgroundColor = .brown
+    }
+  
+    
     // MARK: - Action
     
     @IBAction func addButton(_ sender: UIBarButtonItem) {
@@ -75,6 +82,10 @@ class TodoListViewController: SwipeViewController, UISearchBarDelegate {
         
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
+//            градиент цвета в спистке
+            let colorOpaciti = (CGFloat(indexPath.row) / CGFloat(todoItems?.count ?? 1) + CGFloat(0.15))
+            cell.backgroundColor = UIColor(red: 184/255, green: 200/255, blue: 241/255, alpha: colorOpaciti)
+            
             cell.accessoryType = item.done ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No items add"

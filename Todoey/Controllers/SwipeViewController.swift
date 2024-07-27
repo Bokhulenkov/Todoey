@@ -15,14 +15,28 @@ class SwipeViewController: UITableViewController, SwipeTableViewCellDelegate {
         super.viewDidLoad()
         
         tableView.rowHeight = 80.0
-        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .systemCyan
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        } else {
+            navigationController?.navigationBar.barTintColor = .blue
+        }
+    }
+    
     // MARK: - TableView DataSource
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
         cell.selectionStyle = .none
         cell.delegate = self
+        cell.backgroundColor = UIColor(red: 184/255, green: 200/255, blue: 241/255, alpha: 0.5)
         return cell
     }
     
