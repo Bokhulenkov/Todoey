@@ -1,9 +1,17 @@
 # Todoey ✓
 
+<p align="center">
+<img src="https://github.com/Bokhulenkov/Todoey/blob/main/Images/image1.png" width="140" /> 
+<img src="https://github.com/Bokhulenkov/Todoey/blob/main/Images/image2.png" width="140" />  
+<img src="https://github.com/Bokhulenkov/Todoey/blob/main/Images/image3.png" width="140" /> 
+<img src="https://github.com/Bokhulenkov/Todoey/blob/main/Images/image4.png" width="140" /> 
+<img src="https://github.com/Bokhulenkov/Todoey/blob/main/Images/image5.png" width="140" /> 
+</p>
+
 ## About
 
 Todolist app to keep track of all your tasks.
 
-## Our Goal
+## What i do
 
-The objective of this tutorial is to understand how to save data in iOS. We'll look at various choices and learn to use UserDefaults, Core Data and Realm.
+* I'm use UserDefaults, Core Data and Realm.
